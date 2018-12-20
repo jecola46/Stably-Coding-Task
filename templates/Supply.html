@@ -1,0 +1,25 @@
+<!doctype html>
+<title>Stably Token Supply</title>
+<h1>Total supply of Stable Coins is currently {{current}}.</h1>
+<script src="{{ script }}"></script>
+<canvas id="myChart" width="400" height="170"></canvas>
+<script>
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+            label: 'Total Supply',
+            data: {{ data }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+});
+</script>
