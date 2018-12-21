@@ -42,7 +42,6 @@ def hello():
     currentTime = web3.eth.getBlock(blockNum).timestamp
     hoursSinceFirstBlock = (currentTime - firstBlockTime) / 3600
 
-    print(1)
     ## Get the array from file, it is an array of arrays of form [block, Timestamp, TotalSupply at block]
     dataFileName = os.path.join(dirName, "static", "data.json")
     with open(dataFileName, "r") as filehandle:
@@ -54,29 +53,24 @@ def hello():
     ## elements in the array we need to update it
     if fileArrLength < hoursSinceFirstBlock + 1:
     	## Average number of blocks in an hour, updates to be a better guess
-    	print(2)
     	movingAverage = 266
     	for i in range(fileArrLength, int(hoursSinceFirstBlock) + 1):
     		latestData = fileArr[len(fileArr) - 1]
     		latestBlock = latestData[0]
-    		print(3)
 
     		targetTime = i * 3600 + firstBlockTime
     		newBlock = binarySearchForBlock(targetTime, latestBlock, latestBlock + 2 * movingAverage)
     		movingAverage = newBlock - latestBlock
 
-    		print(4)
     		fileArr.append([newBlock, web3.eth.getBlock(newBlock).timestamp, myContract.functions.totalSupply().call(block_identifier=newBlock)])
     	with open(dataFileName, "w") as filehandle:
     		json.dump(fileArr, filehandle)
-    		print(5)
 
     for i in range(numOfDataPoints):
     	dataArr = [(fileArr[-(i + 1)])[2]] + dataArr
     	labelArr = [datetime.utcfromtimestamp((fileArr[-(i + 1)])[1]).strftime('%Y-%m-%d %H:%M:%S')] + labelArr
     	if(i >= hoursSinceFirstBlock - 1):
     	   break
-    print(6)
 
     ## The graph only updates every hour so to get faster updates the most current supply is shown in the top
     ## of the page.
